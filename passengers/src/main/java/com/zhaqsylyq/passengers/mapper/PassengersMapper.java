@@ -17,7 +17,7 @@ public class PassengersMapper {
         passenger.setName(passengerDto.getName());
         passenger.setEmail(passengerDto.getEmail());
         passenger.setPhoneNumber(passengerDto.getPhoneNumber());
-        passenger.setRating(passengerDto.getRating());
+        passenger.setRating(passengerDto.getRating() == null ? 0.0 : passengerDto.getRating());
         return passenger;
     }
 }

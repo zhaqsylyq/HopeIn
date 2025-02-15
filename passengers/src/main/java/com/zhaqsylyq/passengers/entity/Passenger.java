@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collation = "passengers")
+@Document(collection = "passengers")
 public class Passenger extends BaseEntity{
     @Id
     private String id;

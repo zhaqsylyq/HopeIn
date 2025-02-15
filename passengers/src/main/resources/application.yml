@@ -4,4 +4,10 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/passengerdb
+      uri: mongodb://zhaksylyk:zhaksylyk@localhost:27017/passengerdb?authSource=admin
+#      database: passengerdb
+#      username: zhaksylyk
+#      password: zhaksylyk
+#      authentication-database: admin
+#      host: localhost
+#      port: 27017

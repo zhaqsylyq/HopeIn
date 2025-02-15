@@ -3,8 +3,7 @@ package com.zhaqsylyq.passengers.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data
-@AllArgsConstructor
+@Data @AllArgsConstructor
 public class ResponseDto {
 
     private String statusCode;
