@@ -1,8 +1,12 @@
 package com.zhaqsylyq.passengers.dto;
 
+import com.zhaqsylyq.passengers.entity.PreferredLocation;
+import com.zhaqsylyq.passengers.entity.Ratings;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Schema(
@@ -10,14 +14,31 @@ import lombok.Data;
         description = "Schema to hold Passenger information"
 )
 public class PassengerDto {
+
     @Schema(
-            description = "Name of the Passenger",
-            example = "John Doe"
+            description = "Unique Passenger ID assigned by the system",
+            example = "P1234",
+            accessMode = Schema.AccessMode.READ_ONLY // Prevents users from sending this field in requests
     )
-    @NotEmpty(message = "Name should not be empty")
+    private String passengerId;
+
+    @Schema(
+            description = "FirstName of the Passenger",
+            example = "John"
+    )
+    @NotEmpty(message = "First Name should not be empty")
     @NotNull
-    @Size(min = 3, max = 50, message = "Name should be between 3 and 50 characters")
-    private String name;
+    @Size(min = 3, max = 50, message = "First Name should be between 3 and 50 characters")
+    private String firstName;
+
+    @Schema(
+            description = "LastName of the Passenger",
+            example = "Doe"
+    )
+    @NotEmpty(message = "Last Name should not be empty")
+    @NotNull
+    @Size(min = 3, max = 50, message = "Last Name should be between 3 and 50 characters")
+    private String lastName;
 
     @Schema(
             description = "Email of the Passenger",
@@ -38,8 +59,13 @@ public class PassengerDto {
     private String phoneNumber;
 
     @Schema(
-            description = "Rating of the Passenger",
-            example = "4.5"
+            description = "Preferred locations of the Passenger"
     )
-    private Double rating;
+    private List<PreferredLocation> preferredLocations;
+
+    @Schema(
+            description = "Ratings given by drivers",
+            example = "{ \"driverRatings\": 4.8, \"numberOfRides\": 10 }"
+    )
+    private Ratings ratings;
 }

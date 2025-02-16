@@ -4,6 +4,7 @@ import com.zhaqsylyq.passengers.constants.PassengersConstants;
 import com.zhaqsylyq.passengers.dto.ErrorResponseDto;
 import com.zhaqsylyq.passengers.dto.PassengerDto;
 import com.zhaqsylyq.passengers.dto.ResponseDto;
+import com.zhaqsylyq.passengers.entity.PreferredLocation;
 import com.zhaqsylyq.passengers.service.IPassengersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -82,10 +83,8 @@ public class PassengersController {
             )
     })
     @GetMapping("/fetch")
-    public ResponseEntity<PassengerDto> getPassenger(@RequestParam
-                                                     @Pattern(regexp = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message = "Email should be in format: 0qoZ6@example.com")
-                                                     String email) {
-        PassengerDto passengerDto = iPassengersService.getPassenger(email);
+    public ResponseEntity<PassengerDto> getPassenger(@RequestParam String passengerId) {
+        PassengerDto passengerDto = iPassengersService.getPassenger(passengerId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(passengerDto);
@@ -183,9 +182,9 @@ public class PassengersController {
     })
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deletePassenger(@RequestParam
-                                                       @Pattern(regexp = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message = "Email should be in format: 0qoZ6@example.com")
-                                                       String email) {
-        boolean isDeleted = iPassengersService.deletePassenger(email);
+//                                                       @Pattern(regexp = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message = "Email should be in format: 0qoZ6@example.com")
+                                                       String passengerId) {
+        boolean isDeleted = iPassengersService.deletePassenger(passengerId);
         if (isDeleted) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -196,4 +195,23 @@ public class PassengersController {
                     .body(new ResponseDto(PassengersConstants.STATUS_417, PassengersConstants.MESSAGE_417_DELETE));
         }
     }
+
+    @Operation(
+            summary = "Update preferred locations",
+            description = "REST API to update the preferred locations of a Passenger"
+    )
+    @PutMapping("/{passengerId}/preferred-locations")
+    public ResponseEntity<ResponseDto> updatePreferredLocations(
+            @PathVariable String passengerId,
+            @RequestBody List<PreferredLocation> preferredLocations) {
+        boolean isUpdated = iPassengersService.updatePreferredLocations(passengerId, preferredLocations);
+        if (isUpdated) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseDto(PassengersConstants.STATUS_200, "Preferred locations updated successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(PassengersConstants.STATUS_417, "Failed to update preferred locations"));
+        }
+    }
+
 }

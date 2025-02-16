@@ -6,18 +6,23 @@ import com.zhaqsylyq.passengers.entity.Passenger;
 public class PassengersMapper {
 
     public static PassengerDto mapToPassengerDto(Passenger passenger, PassengerDto passengerDto) {
-        passengerDto.setName(passenger.getName());
+        passengerDto.setPassengerId(passenger.getPassengerId());
+        passengerDto.setFirstName(passenger.getFirstName());
+        passengerDto.setLastName(passenger.getLastName());
         passengerDto.setEmail(passenger.getEmail());
         passengerDto.setPhoneNumber(passenger.getPhoneNumber());
-        passengerDto.setRating(passenger.getRating());
+        passengerDto.setPreferredLocations(passenger.getPreferredLocations());
+        passengerDto.setRatings(passenger.getRatings());
         return passengerDto;
     }
 
     public static Passenger mapToPassenger(PassengerDto passengerDto, Passenger passenger) {
-        passenger.setName(passengerDto.getName());
+        passenger.setFirstName(passengerDto.getFirstName());
+        passenger.setLastName(passengerDto.getLastName());
         passenger.setEmail(passengerDto.getEmail());
         passenger.setPhoneNumber(passengerDto.getPhoneNumber());
-        passenger.setRating(passengerDto.getRating() == null ? 0.0 : passengerDto.getRating());
+        passenger.setPreferredLocations(passengerDto.getPreferredLocations());
+        passenger.setRatings(passengerDto.getRatings());
         return passenger;
     }
 }

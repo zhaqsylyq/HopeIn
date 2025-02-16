@@ -2,7 +2,10 @@ package com.zhaqsylyq.passengers.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,8 +16,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Passenger extends BaseEntity{
     @Id
     private String id;
-    private String name;
+
+    @Indexed(unique = true)
+    private String passengerId; // Publicly exposed, human-readable unique ID
+
+    private String firstName;
+    private String lastName;
     private String email;
     private String phoneNumber;
-    private Double rating;
+
+    private List<PreferredLocation> preferredLocations; // List of preferred locations>
+
+    private Ratings ratings;
 }
