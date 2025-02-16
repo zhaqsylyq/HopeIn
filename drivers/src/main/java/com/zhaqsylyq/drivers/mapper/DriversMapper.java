@@ -6,12 +6,13 @@ import com.zhaqsylyq.drivers.entity.Driver;
 public class DriversMapper {
 
     public static DriverDto mapToDriverDto(Driver driver, DriverDto driverDto) {
+        driverDto.setDriverId(driver.getDriverId());
         driverDto.setName(driver.getName());
         driverDto.setEmail(driver.getEmail());
         driverDto.setPhoneNumber(driver.getPhoneNumber());
-        driverDto.setVehicleType(driver.getVehicleType());
-        driverDto.setVehiclePlateNumber(driver.getVehiclePlateNumber());
-        driverDto.setRating(driver.getRating());
+        driverDto.setVehicleInfo(driver.getVehicleInfo());
+        driverDto.setStatus(driver.getStatus());
+        driverDto.setRatings(driver.getRatings());
         return driverDto;
     }
 
@@ -19,9 +20,9 @@ public class DriversMapper {
         driver.setName(driverDto.getName());
         driver.setEmail(driverDto.getEmail());
         driver.setPhoneNumber(driverDto.getPhoneNumber());
-        driver.setVehicleType(driverDto.getVehicleType());
-        driver.setVehiclePlateNumber(driverDto.getVehiclePlateNumber());
-        driver.setRating(driverDto.getRating() == null ? 0.0 : driverDto.getRating());
+        driver.setVehicleInfo(driverDto.getVehicleInfo());
+        driver.setStatus(driverDto.getStatus());
+        driver.setRatings(driverDto.getRatings());
         return driver;
     }
 

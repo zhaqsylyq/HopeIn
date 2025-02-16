@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,12 +27,15 @@ public class DriversServiceImpl implements IDriversService {
         if(optionalDriver.isPresent()){
             throw new DriverAlreadyExistsException("Driver already registered with given email "+driverDto.getEmail());
         }
+        driver.setDriverId("D" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        driver.setStatus("AVAILABLE"); // Default status
+
         driverRepository.save(driver);
     }
 
     @Override
-    public DriverDto getDriver(String email) {
-        Driver driver = driverRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Driver", "email", email));
+    public DriverDto getDriver(String driverId) {
+        Driver driver = driverRepository.findByDriverId(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver", "driverId", driverId));
         return DriversMapper.mapToDriverDto(driver, new DriverDto());
     }
 
@@ -44,12 +48,11 @@ public class DriversServiceImpl implements IDriversService {
     @Override
     public boolean updateDriver(DriverDto driverDto) {
         boolean isUpdated = false;
-        Driver driver = driverRepository.findByEmail(driverDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("Driver", "email", driverDto.getEmail()));
+        Driver driver = driverRepository.findByDriverId(driverDto.getDriverId()).orElseThrow(() -> new ResourceNotFoundException("Driver", "driverId", driverDto.getDriverId()));
         if(driverDto.getName() != null && !driverDto.getName().isEmpty()){
             driver.setName(driverDto.getName());
             driver.setPhoneNumber(driverDto.getPhoneNumber());
-            driver.setVehicleType(driverDto.getVehicleType());
-            driver.setVehiclePlateNumber(driverDto.getVehiclePlateNumber());
+            driver.setVehicleInfo(driverDto.getVehicleInfo());
             driverRepository.save(driver);
             isUpdated = true;
         }
@@ -57,9 +60,25 @@ public class DriversServiceImpl implements IDriversService {
     }
 
     @Override
-    public boolean deleteDriver(String email) {
-        Driver driver = driverRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Driver", "email", email));
+    public boolean deleteDriver(String driverId) {
+        Driver driver = driverRepository.findByDriverId(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver", "driverId", driverId));
         driverRepository.deleteById(driver.getId());
         return true;
+    }
+
+    @Override
+    public boolean updateStatus(String driverId, String status) {
+        Driver driver = driverRepository.findByDriverId(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver", "driverId", driverId));
+
+        driver.setStatus(status);
+        driverRepository.save(driver);
+        return true;
+    }
+
+    @Override
+    public List<DriverDto> getAvailableDrivers() {
+        List<Driver> drivers = driverRepository.findByStatus("AVAILABLE");
+        return drivers.stream().map(driver -> DriversMapper.mapToDriverDto(driver, new DriverDto())).collect(Collectors.toList());
     }
 }

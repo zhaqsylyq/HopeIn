@@ -2,6 +2,7 @@ package com.zhaqsylyq.drivers.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -13,10 +14,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Driver extends BaseEntity {
     @Id
     private String id;
+    @Indexed(unique = true)
+    private String driverId; // Exposed, human-readable driver identifier
     private String name;
     private String email;
     private String phoneNumber;
-    private String vehicleType;
-    private String vehiclePlateNumber;
-    private Double rating;
+    private VehicleInfo vehicleInfo;
+    private String status;
+    private Ratings ratings;
 }

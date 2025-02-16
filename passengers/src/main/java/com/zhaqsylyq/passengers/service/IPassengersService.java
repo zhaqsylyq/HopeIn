@@ -8,13 +8,13 @@ import java.util.List;
 public interface IPassengersService {
     void createPassenger(PassengerDto passengerDto);
 
-    PassengerDto getPassenger(String email);
+    PassengerDto getPassenger(String passengerId);
 
     List<PassengerDto> getAllPassengers();
 
     boolean updatePassenger(PassengerDto passengerDto);
 
-    boolean deletePassenger(String email);
+    boolean deletePassenger(String passengerId);
 
     boolean updatePreferredLocations(String passengerId, List<PreferredLocation> preferredLocations);
 }

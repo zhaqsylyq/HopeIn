@@ -82,9 +82,9 @@ public class DriversController {
     })
     @GetMapping("/fetch")
     public ResponseEntity<DriverDto> getDriver(@RequestParam
-                                               @Pattern(regexp = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message = "Email should be in format: 0qoZ6@example.com")
-                                               String email) {
-        DriverDto driverDto = iDriversService.getDriver(email);
+                                               //@Pattern(regexp = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message = "Email should be in format: 0qoZ6@example.com")
+                                               String driverId) {
+        DriverDto driverDto = iDriversService.getDriver(driverId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(driverDto);
@@ -179,9 +179,9 @@ public class DriversController {
     })
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteDriver(@RequestParam
-                                                    @Pattern(regexp = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message = "Email should be in format: 0qoZ6@example.com")
-                                                    String email) {
-        boolean isDeleted = iDriversService.deleteDriver(email);
+                                                    //@Pattern(regexp = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message = "Email should be in format: 0qoZ6@example.com")
+                                                    String driverId) {
+        boolean isDeleted = iDriversService.deleteDriver(driverId);
         if (isDeleted) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -191,5 +191,76 @@ public class DriversController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(DriversConstants.STATUS_417, DriversConstants.MESSAGE_417_DELETE));
         }
+    }
+
+    @Operation(
+            summary = "Update Driver Status REST API",
+            description = "REST API to update the status of a driver in HopIn"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status 200 OK"
+            ),
+            @ApiResponse(
+                    responseCode = "417",
+                    description = "Expectation Failed",
+                    content = @Content(
+                            schema = @Schema(
+                                    implementation = ErrorResponseDto.class
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status 500 INTERNAL SERVER ERROR",
+                    content = @Content(
+                            schema = @Schema(
+                                    implementation = ErrorResponseDto.class
+                            )
+                    )
+            )
+    })
+    @PutMapping("/update-status/{driverId}")
+    public ResponseEntity<ResponseDto> updateDriverStatus(
+            @PathVariable String driverId,
+            @RequestParam @Pattern(regexp = "AVAILABLE|OFFLINE|ON_TRIP", message = "Status should be AVAILABLE, OFFLINE, or ON_TRIP") String status) {
+        boolean isUpdated = iDriversService.updateStatus(driverId, status);
+        if (isUpdated) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(DriversConstants.STATUS_200, DriversConstants.MESSAGE_200));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(DriversConstants.STATUS_417, DriversConstants.MESSAGE_417_UPDATE));
+        }
+    }
+
+    @Operation(
+            summary = "Fetch Available Drivers REST API",
+            description = "REST API to fetch all available drivers in HopIn"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status 200 OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status 500 INTERNAL SERVER ERROR",
+                    content = @Content(
+                            schema = @Schema(
+                                    implementation = ErrorResponseDto.class
+                            )
+                    )
+            )
+    })
+    @GetMapping("/available")
+    public ResponseEntity<List<DriverDto>> getAvailableDrivers() {
+        List<DriverDto> drivers = iDriversService.getAvailableDrivers();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(drivers);
     }
 }

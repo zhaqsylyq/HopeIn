@@ -1,0 +1,4 @@
+package com.zhaqsylyq.drivers.entity;
+
+public class Ratings {
+}

@@ -1,6 +1,9 @@
 package com.zhaqsylyq.drivers.dto;
 
+import com.zhaqsylyq.drivers.entity.Ratings;
+import com.zhaqsylyq.drivers.entity.VehicleInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -10,6 +13,13 @@ import lombok.Data;
     description = "Schema to hold driver information"
 )
 public class DriverDto {
+    @Schema(
+            description = "Unique Driver ID assigned by the system",
+            example = "D5678",
+            accessMode = Schema.AccessMode.READ_ONLY
+    )
+    private String driverId; // Generated automatically
+
     @Schema(
         description = "Name of the Driver",
         example = "John Doe"
@@ -37,28 +47,16 @@ public class DriverDto {
     @Pattern(regexp = "[0-9]{10}", message = "Phone number should be 10 digits")
     private String phoneNumber;
 
-    @Schema(
-        description = "Vehicle type of the Driver",
-        example = "Sedan"
-    )
-    @NotEmpty(message = "Vehicle type should not be empty")
-    @NotNull
-    @Size(min = 3, max = 50, message = "Vehicle type should be between 3 and 50 characters")
-    @Pattern(regexp = "[a-zA-Z\\s]+", message = "Vehicle type should contain only letters and spaces")
-    private String vehicleType;
+    @Valid // Ensures validation applies to the nested object
+    @NotNull(message = "Vehicle information is required")
+    private VehicleInfo vehicleInfo;
 
     @Schema(
-        description = "Vehicle plate number of the Driver",
-        example = "ABC123"
+            description = "Driver status",
+            example = "AVAILABLE"
     )
-    @NotEmpty(message = "Vehicle plate number should not be empty")
-    @NotNull
-    @Pattern(regexp = "[a-zA-Z0-9]{6}", message = "Vehicle plate number should be 6 characters long")
-    private String vehiclePlateNumber;
+    @Pattern(regexp = "AVAILABLE|OFFLINE|ON_TRIP", message = "Status should be AVAILABLE, OFFLINE, or ON_TRIP")
+    private String status; // AVAILABLE, OFFLINE, ON_TRIP
 
-//    @Schema(
-//        description = "Rating of the Driver",
-//        example = "4.5"
-//    )
-    private Double rating = 0.0;
+    private Ratings ratings;
 }
