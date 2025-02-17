@@ -200,7 +200,7 @@ public class PassengersController {
             summary = "Update preferred locations",
             description = "REST API to update the preferred locations of a Passenger"
     )
-    @PutMapping("/{passengerId}/preferred-locations")
+        @PutMapping("/{passengerId}/preferred-locations")
     public ResponseEntity<ResponseDto> updatePreferredLocations(
             @PathVariable String passengerId,
             @RequestBody List<PreferredLocation> preferredLocations) {
