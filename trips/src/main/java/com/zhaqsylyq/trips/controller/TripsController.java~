@@ -116,7 +116,7 @@ public class TripsController {
                 .body(tripDto);
     }
 
-    @GetMapping("/fetch-by-status/{tripStatus}")
+    @GetMapping("/fetch/{tripStatus}")
     public ResponseEntity<List<TripDto>> fetchTripsByStatus(@PathVariable TripStatus tripStatus) {
         List<TripDto> tripDtos = iTripsService.fetchTripsByStatus(tripStatus);
         return ResponseEntity

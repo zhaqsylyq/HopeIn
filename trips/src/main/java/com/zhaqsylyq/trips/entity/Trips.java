@@ -17,8 +17,8 @@ import java.util.UUID;
 public class Trips extends BaseEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
 //    @Column(nullable = false)
     private String passengerId;
@@ -32,11 +32,21 @@ public class Trips extends BaseEntity{
 
     private LocalDateTime endTime;
 
-//    @Column(columnDefinition = "JSON")
-    private String startLocation;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "start_latitude")),
+            @AttributeOverride(name = "longitude", column = @Column(name = "start_longitude")),
+            @AttributeOverride(name = "address", column = @Column(name = "start_address"))
+    })
+    private Location startLocation;
 
-//    @Column(columnDefinition = "JSON")
-    private String endLocation;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "end_latitude")),
+            @AttributeOverride(name = "longitude", column = @Column(name = "end_longitude")),
+            @AttributeOverride(name = "address", column = @Column(name = "end_address"))
+    })
+    private Location endLocation;
 
     private BigDecimal fareAmount;
 }
