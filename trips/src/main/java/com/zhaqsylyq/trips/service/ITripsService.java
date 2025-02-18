@@ -19,5 +19,9 @@ public interface ITripsService {
 
     List<TripDto> fetchTripsByStatus(TripStatus tripStatus);
 
+    TripDto completeTrip(Long tripId);
+
+    TripDto startTrip(Long tripId);
+
 //    boolean updateTrip(String , TripDto );
 }

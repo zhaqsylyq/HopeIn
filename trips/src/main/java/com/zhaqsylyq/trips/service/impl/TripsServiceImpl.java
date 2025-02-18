@@ -83,4 +83,36 @@ public class TripsServiceImpl implements ITripsService {
         return trips.stream().map(trip -> TripsMapper.mapToTripDto(trip, new TripDto())).toList();
     }
 
+    @Override
+    public TripDto completeTrip(Long tripId) {
+        Trips trip = tripsRepository.findById(tripId).orElseThrow(() -> new ResourceNotFoundException("Trip", "tripId", tripId.toString()));
+
+        if(trip.getStatus() != TripStatus.IN_PROGRESS){
+            throw new IllegalStateException("Trip is not in progress, so cannot be completed");
+        }
+
+        trip.setStatus(TripStatus.COMPLETED);
+        trip.setEndTime(LocalDateTime.now());
+        tripsRepository.save(trip);
+        return TripsMapper.mapToTripDto(trip, new TripDto());
+    }
+
+    @Override
+    public TripDto startTrip(Long tripId) {
+        //  Fetch trip by ID
+        Trips trip = tripsRepository.findById(tripId)
+                .orElseThrow(() -> new ResourceNotFoundException("Trip", "tripId", tripId.toString()));
+
+        //  Ensure the trip is currently "ACCEPTED"
+        if (trip.getStatus() != TripStatus.ACCEPTED) {
+            throw new IllegalStateException("Trip cannot be started as it is not in ACCEPTED state.");
+        }
+
+        //  Mark the trip as "IN_PROGRESS"
+        trip.setStatus(TripStatus.IN_PROGRESS);
+        tripsRepository.save(trip);
+
+        return TripsMapper.mapToTripDto(trip, new TripDto());
+    }
+
 }

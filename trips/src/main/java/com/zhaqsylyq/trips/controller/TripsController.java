@@ -179,8 +179,37 @@ public class TripsController {
                 .body(tripDto);
     }
 
-    //TODO : PUT /api/v1/trips/{tripId}/complete
-    //TODO : Integrate driverDto to send as a part of the accept response
+    @Operation(
+            summary = "Mark a trip as completed",
+            description = "Updates the trip status to COMPLETED and sets the endTime"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Trip marked as completed"),
+            @ApiResponse(responseCode = "404", description = "Trip not found"),
+            @ApiResponse(responseCode = "400", description = "Trip is not in progress")
+    })
+    @PutMapping("/complete/{tripId}")
+    public ResponseEntity<TripDto> completeTrip(@PathVariable Long tripId) {
+        TripDto tripDto = iTripsService.completeTrip(tripId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(tripDto);
+    }
+
+    @Operation(
+            summary = "Start a trip",
+            description = "Updates the trip status to IN_PROGRESS"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Trip started successfully"),
+            @ApiResponse(responseCode = "404", description = "Trip not found"),
+            @ApiResponse(responseCode = "400", description = "Trip is not in ACCEPTED state")
+    })
+    @PutMapping("/start/{tripId}")
+    public ResponseEntity<TripDto> startTrip(@PathVariable Long tripId) {
+        TripDto trip = iTripsService.startTrip(tripId);
+        return ResponseEntity.ok(trip);
+    }
 //    @PutMapping("/update/{tripId}")
 //    public ResponseEntity<ResponseDto> updateTrip(@PathVariable String tripId, @RequestBody TripDto tripDto) {
 //        boolean tripUpdated = iTripsService.updateTrip(tripId, tripDto);
