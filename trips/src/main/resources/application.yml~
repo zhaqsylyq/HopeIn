@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/tripsdb?createDatabaseIfNotExist=true&u&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/tripsdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
     username: root #zhaksylyk
     password: root #zhaksylyk
     driver-class-name: com.mysql.cj.jdbc.Driver

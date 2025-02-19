@@ -36,11 +36,19 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: tripsdb
-      MYSQL_USER: zhaksylyk
-      MYSQL_PASSWORD: zhaksylyk
+#      MYSQL_DATABASE: tripsdb
+#      MYSQL_USER: zhaksylyk
+#      MYSQL_PASSWORD: zhaksylyk
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d  # Mount custom init scripts
+
+# RUN THIS ON TERMINAL AFTER DOCKER COMPOSE UP
+#      docker exec -it mysql mysql -u root -p (PASSWORD IS ALSO ROOT)
+#      SOURCE /docker-entrypoint-initdb.d/init.sql;
+#      SHOW DATABASES;
+
+
 
 volumes:
   mongodb_data:

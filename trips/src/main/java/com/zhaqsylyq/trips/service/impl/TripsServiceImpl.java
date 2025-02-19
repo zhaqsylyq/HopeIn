@@ -10,6 +10,7 @@ import com.zhaqsylyq.trips.mapper.TripsMapper;
 import com.zhaqsylyq.trips.repository.TripsRepository;
 import com.zhaqsylyq.trips.service.FareCalculator;
 import com.zhaqsylyq.trips.service.ITripsService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class TripsServiceImpl implements ITripsService {
 
     private TripsRepository tripsRepository;
     @Override
+    @Transactional
     public void createTrip(CreateRequestDto createRequestDto) {
         Trips trips = TripsMapper.mapToTrips(createRequestDto, new Trips());
 
@@ -64,6 +66,7 @@ public class TripsServiceImpl implements ITripsService {
     }
 
     @Override
+    @Transactional
     public TripDto acceptTrip(Long tripId, String driverId) {
         Trips trip = tripsRepository.findById(tripId).orElseThrow(() -> new ResourceNotFoundException("Trip", "tripId", tripId.toString()));
         if (trip.getStatus() != TripStatus.REQUESTED) {
@@ -84,6 +87,7 @@ public class TripsServiceImpl implements ITripsService {
     }
 
     @Override
+    @Transactional
     public TripDto completeTrip(Long tripId) {
         Trips trip = tripsRepository.findById(tripId).orElseThrow(() -> new ResourceNotFoundException("Trip", "tripId", tripId.toString()));
 
@@ -98,6 +102,7 @@ public class TripsServiceImpl implements ITripsService {
     }
 
     @Override
+    @Transactional
     public TripDto startTrip(Long tripId) {
         //  Fetch trip by ID
         Trips trip = tripsRepository.findById(tripId)
