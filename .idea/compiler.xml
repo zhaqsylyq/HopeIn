@@ -3,7 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for payments" enabled="true">
+      <profile name="Annotation profile for notifications" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -12,6 +12,7 @@
         </processorPath>
         <module name="passengers" />
         <module name="drivers" />
+        <module name="notifications" />
         <module name="trips" />
         <module name="payments" />
       </profile>
@@ -20,6 +21,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="drivers" options="-parameters" />
+      <module name="notifications" options="-parameters" />
       <module name="passengers" options="-parameters" />
       <module name="payments" options="-parameters" />
       <module name="trips" options="-parameters" />
