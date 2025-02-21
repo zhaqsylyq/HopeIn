@@ -12,6 +12,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: zhaksylyk
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - hopin
 
   mongo-express:
     image: mongo-express
@@ -23,10 +25,19 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: zhaksylyk
       ME_CONFIG_MONGODB_ADMINPASSWORD: zhaksylyk
       ME_CONFIG_MONGODB_SERVER: mongodb
+#      ME_CONFIG_BASICAUTH_USERNAME: admin
+#      ME_CONFIG_BASICAUTH_PASSWORD: admin
       # Explicitly set the URL, including authSource=admin
       ME_CONFIG_MONGODB_URL: "mongodb://zhaksylyk:zhaksylyk@mongodb:27017/?authSource=admin"
     depends_on:
       - mongodb
+    networks:
+      - hopin
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mysql:
     image: mysql:latest
@@ -37,18 +48,88 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
 #      MYSQL_DATABASE: tripsdb
-#      MYSQL_USER: zhaksylyk
-#      MYSQL_PASSWORD: zhaksylyk
+      MYSQL_USER: zhaksylyk
+      MYSQL_PASSWORD: zhaksylyk
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init-scripts:/docker-entrypoint-initdb.d  # Mount custom init scripts
+    networks:
+      - hopin
 
-# RUN THIS ON TERMINAL AFTER DOCKER COMPOSE UP
-#      docker exec -it mysql mysql -u root -p (PASSWORD IS ALSO ROOT)
-#      SOURCE /docker-entrypoint-initdb.d/init.sql;
-#      SHOW DATABASES;
+  drivers:
+    image: "zhaqsylyq/drivers:v1"
+    container_name: drivers-ms
+    ports:
+      - "8082:8082"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - hopin
+    depends_on:
+      - mongodb
+
+  notifications:
+    image: "zhaqsylyq/notifications:v1"
+    container_name: notifications-ms
+    ports:
+      - "8085:8085"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - hopin
+    depends_on:
+      - mongodb
+
+  passengers:
+    image: "zhaqsylyq/passengers:v1"
+    container_name: passengers-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - hopin
+    depends_on:
+      - mongodb
+
+  payments:
+    image: "zhaqsylyq/payments:v1"
+    container_name: payments-ms
+    ports:
+      - "8084:8084"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - hopin
+    depends_on:
+      - mysql
+
+  trips:
+    image: "zhaqsylyq/trips:v1"
+    container_name: trips-ms
+    ports:
+      - "8083:8083"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - hopin
+    depends_on:
+      - mysql
 
 
+networks:
+  hopin:
+    driver: "bridge"
 
 volumes:
   mongodb_data:

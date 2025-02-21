@@ -3,7 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for notifications" enabled="true">
+      <profile name="Annotation profile for trips" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -12,8 +12,8 @@
         </processorPath>
         <module name="passengers" />
         <module name="drivers" />
-        <module name="notifications" />
         <module name="trips" />
+        <module name="notifications" />
         <module name="payments" />
       </profile>
     </annotationProcessing>

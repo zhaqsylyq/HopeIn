@@ -7,5 +7,5 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://zhaksylyk:zhaksylyk@localhost:27017/notificationsdb?authSource=admin
+      uri: mongodb://zhaksylyk:zhaksylyk@mongodb:27017/notificationsdb?authSource=admin
 

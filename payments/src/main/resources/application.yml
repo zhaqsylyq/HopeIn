@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/paymentsdb?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://mysql:3306/paymentsdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
 #    ?createDatabaseIfNotExist=true allowPublicKeyRetrieval=true&
     username: root #zhaksylyk
     password: root #zhaksylyk
