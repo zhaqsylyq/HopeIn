@@ -1,0 +1,8 @@
+notifications:
+  message: "Welcome to HopIn notifications related QA APIs "
+  contactDetails:
+    name: "Raphael Varane - QA Lead"
+    email: "varane@hopin.com"
+  onCallSupport:
+    - (666) 265-3765
+    - (666) 734-8371

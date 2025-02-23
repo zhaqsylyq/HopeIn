@@ -1,0 +1,8 @@
+drivers:
+  message: "Welcome to HopIn drivers related prod APIs "
+  contactDetails:
+    name: "Sergio Ramos - Product Owner"
+    email: "ramos@hopin.com"
+  onCallSupport:
+    - (453) 392-4829
+    - (236) 203-0384

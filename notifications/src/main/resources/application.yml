@@ -3,9 +3,22 @@ server:
 
 spring:
   application:
-    name: notifications-service
-
+    name: "notifications"
+  profiles:
+    active: "prod"
   data:
     mongodb:
       uri: mongodb://zhaksylyk:zhaksylyk@mongodb:27017/notificationsdb?authSource=admin
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

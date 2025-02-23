@@ -2,6 +2,7 @@ package com.zhaqsylyq.drivers.controller;
 
 import com.zhaqsylyq.drivers.constants.DriversConstants;
 import com.zhaqsylyq.drivers.dto.DriverDto;
+import com.zhaqsylyq.drivers.dto.DriversContactInfoDto;
 import com.zhaqsylyq.drivers.dto.ErrorResponseDto;
 import com.zhaqsylyq.drivers.dto.ResponseDto;
 import com.zhaqsylyq.drivers.service.IDriversService;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +30,18 @@ import java.util.List;
 )
 @RestController
 @RequestMapping(value = "api/v1/drivers", produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
+//@AllArgsConstructor
 @Validated
 public class DriversController {
 
-    private IDriversService iDriversService;
+    private final IDriversService iDriversService;
+
+    public DriversController(IDriversService iDriversService) {
+        this.iDriversService = iDriversService;
+    }
+
+    @Autowired
+    private DriversContactInfoDto driversContactInfoDto;
 
     @Operation(
             summary = "Create Driver REST API",
@@ -263,4 +272,30 @@ public class DriversController {
                 .status(HttpStatus.OK)
                 .body(drivers);
     }
+
+    @Operation(
+            summary = "Get Contact Info",
+            description = "Contact Info details that can be reached out in case of any issues"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<DriversContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(driversContactInfoDto);
+    }
+
 }

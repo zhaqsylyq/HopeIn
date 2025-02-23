@@ -1,0 +1,8 @@
+passengers:
+  message: "Welcome to HopIn passengers related local APIs "
+  contactDetails:
+    name: "Daniel Carvajal - Developer"
+    email: "carvajal@hopin.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-1345

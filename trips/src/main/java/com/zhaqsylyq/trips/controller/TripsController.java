@@ -1,10 +1,7 @@
 package com.zhaqsylyq.trips.controller;
 
 import com.zhaqsylyq.trips.constants.TripStatus;
-import com.zhaqsylyq.trips.dto.CreateRequestDto;
-import com.zhaqsylyq.trips.dto.ErrorResponseDto;
-import com.zhaqsylyq.trips.dto.ResponseDto;
-import com.zhaqsylyq.trips.dto.TripDto;
+import com.zhaqsylyq.trips.dto.*;
 import com.zhaqsylyq.trips.service.ITripsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +26,18 @@ import java.util.List;
 )
 @RestController
 @RequestMapping(value = "api/v1/trips", produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
+//@AllArgsConstructor
 @Validated
 public class TripsController {
 
     private final ITripsService iTripsService;
+
+    public TripsController(ITripsService iTripsService) {
+        this.iTripsService = iTripsService;
+    }
+
+    @Autowired
+    private TripsContactInfoDto tripsContactInfoDto;
 
     @Operation(
             summary = "Create Trip REST API",
@@ -209,6 +214,31 @@ public class TripsController {
     public ResponseEntity<TripDto> startTrip(@PathVariable Long tripId) {
         TripDto trip = iTripsService.startTrip(tripId);
         return ResponseEntity.ok(trip);
+    }
+
+    @Operation(
+            summary = "Get Contact Info",
+            description = "Contact Info details that can be reached out in case of any issues"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<TripsContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(tripsContactInfoDto);
     }
 //    @PutMapping("/update/{tripId}")
 //    public ResponseEntity<ResponseDto> updateTrip(@PathVariable String tripId, @RequestBody TripDto tripDto) {

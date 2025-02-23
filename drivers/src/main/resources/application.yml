@@ -2,6 +2,24 @@ server:
   port: 8082
 
 spring:
+  application:
+    name: "drivers"
+  profiles:
+    active: "prod"
   data:
     mongodb:
       uri: mongodb://zhaksylyk:zhaksylyk@mongodb:27017/driverdb?authSource=admin
+
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

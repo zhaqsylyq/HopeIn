@@ -1,0 +1,8 @@
+trips:
+  message: "Welcome to HopIn trips related QA APIs "
+  contactDetails:
+    name: "Lucas Vazquez - QA Lead"
+    email: "lucas@hopin.com"
+  onCallSupport:
+    - (666) 265-3765
+    - (666) 734-8371

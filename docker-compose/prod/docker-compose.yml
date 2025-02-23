@@ -1,0 +1,190 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: zhaksylyk
+      MONGO_INITDB_ROOT_PASSWORD: zhaksylyk
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'db.runCommand(\"ping\").ok' | mongosh --quiet mongodb:27017"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: zhaksylyk
+      ME_CONFIG_MONGODB_ADMINPASSWORD: zhaksylyk
+      ME_CONFIG_MONGODB_SERVER: mongodb
+#      ME_CONFIG_BASICAUTH_USERNAME: admin
+#      ME_CONFIG_BASICAUTH_PASSWORD: admin
+      # Explicitly set the URL, including authSource=admin
+      ME_CONFIG_MONGODB_URL: "mongodb://zhaksylyk:zhaksylyk@mongodb:27017/?authSource=admin"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: tripsdb
+      MYSQL_USER: zhaksylyk
+      MYSQL_PASSWORD: zhaksylyk
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d  # Mount custom init scripts
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  rabbit:
+    image: rabbitmq:3.12-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  configserver:
+    image: "zhaqsylyq/configserver:v1"
+    container_name: configserver-ms
+    ports:
+      - "8071:8071"
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+
+  drivers:
+    image: "zhaqsylyq/drivers:v1"
+    container_name: drivers-ms
+    ports:
+      - "8082:8082"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "drivers"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  notifications:
+    image: "zhaqsylyq/notifications:v1"
+    container_name: notifications-ms
+    ports:
+      - "8085:8085"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "notifications"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  passengers:
+    image: "zhaqsylyq/passengers:v1"
+    container_name: passengers-ms
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "passengers"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  payments:
+    image: "zhaqsylyq/payments:v1"
+    container_name: payments-ms
+    ports:
+      - "8084:8084"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "payments"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  trips:
+    image: "zhaqsylyq/trips:v1"
+    container_name: trips-ms
+    ports:
+      - "8083:8083"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "trips"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+
+networks:
+  hopin:
+    driver: "bridge"
+
+volumes:
+  mongodb_data:
+  mysql_data:

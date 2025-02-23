@@ -1,0 +1,8 @@
+payments:
+  message: "Welcome to HopIn payments related QA APIs "
+  contactDetails:
+    name: "Gareth Bale - QA Lead"
+    email: "bale@hopin.com"
+  onCallSupport:
+    - (666) 265-3765
+    - (666) 734-8371

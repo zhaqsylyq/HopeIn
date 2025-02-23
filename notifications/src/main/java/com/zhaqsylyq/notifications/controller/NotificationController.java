@@ -1,14 +1,18 @@
 package com.zhaqsylyq.notifications.controller;
 
 import com.zhaqsylyq.notifications.dto.NotificationDto;
+import com.zhaqsylyq.notifications.dto.NotificationsContactInfoDto;
 import com.zhaqsylyq.notifications.exception.ResourceNotFoundException;
 import com.zhaqsylyq.notifications.service.INotificationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +24,18 @@ import java.util.List;
 @Tag(name = "REST API for Notifications", description = "REST API for Notifications in HopIn")
 @RestController
 @RequestMapping(value = "/api/v1/notifications", produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
+//@AllArgsConstructor
 @Validated
 public class NotificationController {
 
     private final INotificationService notificationService;
+
+    public NotificationController(INotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
+
+    @Autowired
+    private NotificationsContactInfoDto notificationsContactInfoDto;
 
     @Operation(summary = "Create Notification", description = "Creates a new notification for a user")
     @ApiResponses({
@@ -51,5 +62,27 @@ public class NotificationController {
             throw new ResourceNotFoundException("Notifications", "recipientId", recipientId);
         }
         return ResponseEntity.ok(notifications);
+    }
+
+    @Operation(
+            summary = "Get Contact Info",
+            description = "Contact Info details that can be reached out in case of any issues"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error"
+            )
+    }
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<NotificationsContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(notificationsContactInfoDto);
     }
 }

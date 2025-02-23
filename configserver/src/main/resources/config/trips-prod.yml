@@ -1,0 +1,8 @@
+trips:
+  message: "Welcome to HopIn trips related prod APIs "
+  contactDetails:
+    name: "Isco Alarcon - Product Owner"
+    email: "isco@hopin.com"
+  onCallSupport:
+    - (453) 392-4829
+    - (236) 203-0384

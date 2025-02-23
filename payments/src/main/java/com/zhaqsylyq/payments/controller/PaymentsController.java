@@ -3,6 +3,7 @@ package com.zhaqsylyq.payments.controller;
 import com.zhaqsylyq.payments.constants.PaymentsConstants;
 import com.zhaqsylyq.payments.dto.ErrorResponseDto;
 import com.zhaqsylyq.payments.dto.PaymentDto;
+import com.zhaqsylyq.payments.dto.PaymentsContactInfoDto;
 import com.zhaqsylyq.payments.dto.ResponseDto;
 import com.zhaqsylyq.payments.service.PaymentsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,10 +25,17 @@ import java.util.List;
 @Tag(name = "Payment APIs", description = "CRUD APIs for Payments in HopIn")
 @RestController
 @RequestMapping("/api/v1/payments")
-@AllArgsConstructor
+//@AllArgsConstructor
 @Validated
 public class PaymentsController {
     private final PaymentsService paymentsService;
+
+    public PaymentsController(PaymentsService paymentsService) {
+        this.paymentsService = paymentsService;
+    }
+
+    @Autowired
+    private PaymentsContactInfoDto paymentsContactInfoDto;
 
     @Operation(summary = "Create a Payment", description = "Registers a new payment for a trip")
     @ApiResponses({
@@ -59,5 +68,30 @@ public class PaymentsController {
     public ResponseEntity<ResponseDto> updatePaymentStatus(@PathVariable Long paymentId, @RequestParam String status) {
         paymentsService.updatePaymentStatus(paymentId, status);
         return ResponseEntity.ok(new ResponseDto(PaymentsConstants.STATUS_200, "Payment status updated successfully"));
+    }
+
+    @Operation(
+            summary = "Get Contact Info",
+            description = "Contact Info details that can be reached out in case of any issues"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<PaymentsContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(paymentsContactInfoDto);
     }
 }

@@ -1,0 +1,8 @@
+notifications:
+  message: "Welcome to HopIn notifications related local APIs "
+  contactDetails:
+    name: "Leo Messi - Developer"
+    email: "messi@hopin.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-1345

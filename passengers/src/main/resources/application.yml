@@ -2,12 +2,23 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: "passengers"
+  profiles:
+    active: "prod"
   data:
     mongodb:
       uri: mongodb://zhaksylyk:zhaksylyk@mongodb:27017/passengerdb?authSource=admin
-#      database: passengerdb
-#      username: zhaksylyk
-#      password: zhaksylyk
-#      authentication-database: admin
-#      host: localhost
-#      port: 27017
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

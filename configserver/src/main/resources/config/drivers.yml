@@ -1,0 +1,8 @@
+drivers:
+  message: "Welcome to HopIn drivers related local APIs "
+  contactDetails:
+    name: "Nacho Fernandez - Developer"
+    email: "nacho@hopin.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-1345

@@ -1,0 +1,8 @@
+drivers:
+  message: "Welcome to HopIn drivers related QA APIs "
+  contactDetails:
+    name: "Cristiano Ronaldo - QA Lead"
+    email: "cristiano@hopin.com"
+  onCallSupport:
+    - (666) 265-3765
+    - (666) 734-8371

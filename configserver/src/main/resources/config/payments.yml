@@ -1,0 +1,8 @@
+payments:
+  message: "Welcome to HopIn payments related local APIs "
+  contactDetails:
+    name: "Luka Modric - Developer"
+    email: "modric@hopin.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-1345
